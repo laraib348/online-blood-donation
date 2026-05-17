@@ -1,0 +1,22 @@
+body {
+  background-color: #f8f9fa;
+}
+
+/* HERO SECTION */
+.hero {
+  height: 85vh;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+  url("https://images.unsplash.com/photo-1615461066841-6116e61058f4");
+  background-size: cover;
+  background-position: center;
+}
+
+/* CARDS */
+.card {
+  border-radius: 12px;
+}
+
+/* FOOTER */
+.footer {
+  background-color: #111 !important;
+}
