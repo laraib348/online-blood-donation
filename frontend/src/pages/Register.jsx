@@ -11,6 +11,8 @@ function Register() {
     phone: ''
   })
 
+  const [loading, setLoading] = useState(false)
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
@@ -18,9 +20,32 @@ function Register() {
   const submit = async (e) => {
     e.preventDefault()
 
-    await axios.post('http://localhost:8000/api/donor/add', form)
+    try {
+      setLoading(true)
 
-    alert('Donor Added')
+      const res = await axios.post(
+        'http://localhost:8000/api/donor/add',
+        form
+      )
+
+      console.log(res.data)
+      alert(res.data.message || 'Donor Added')
+
+      // reset form
+      setForm({
+        name: '',
+        bloodGroup: '',
+        city: '',
+        age: '',
+        phone: ''
+      })
+
+    } catch (error) {
+      console.log("ERROR:", error.response?.data || error.message)
+      alert(error.response?.data?.message || "Server Error")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -31,22 +56,42 @@ function Register() {
       <form className="w-50 mx-auto" onSubmit={submit}>
 
         <input name="name" className="form-control my-2"
-          placeholder="Name" onChange={handleChange} />
+          placeholder="Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
 
         <input name="bloodGroup" className="form-control my-2"
-          placeholder="Blood Group" onChange={handleChange} />
+          placeholder="Blood Group"
+          value={form.bloodGroup}
+          onChange={handleChange}
+          required
+        />
 
         <input name="city" className="form-control my-2"
-          placeholder="City" onChange={handleChange} />
+          placeholder="City"
+          value={form.city}
+          onChange={handleChange}
+          required
+        />
 
         <input name="age" className="form-control my-2"
-          placeholder="Age" onChange={handleChange} />
+          placeholder="Age"
+          value={form.age}
+          onChange={handleChange}
+          required
+        />
 
         <input name="phone" className="form-control my-2"
-          placeholder="Phone" onChange={handleChange} />
+          placeholder="Phone"
+          value={form.phone}
+          onChange={handleChange}
+          required
+        />
 
-        <button className="btn btn-danger w-100">
-          Submit
+        <button className="btn btn-danger w-100" disabled={loading}>
+          {loading ? "Submitting..." : "Submit"}
         </button>
 
       </form>
