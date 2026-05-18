@@ -13,7 +13,7 @@ const DonorList = () => {
 
   const fetchDonors = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/donor");
+      const res = await axios.get("http://localhost:8000/api/donor/all");
 
       setDonors(res.data.donors);
     } catch (error) {
