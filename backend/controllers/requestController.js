@@ -1,44 +1,80 @@
 const Request = require("../models/requestModel");
 
-// Add Request
+// ➤ CREATE REQUEST
 const addRequest = async (req, res) => {
   try {
-    const request = new Request(req.body);
-
-    await request.save();
+    const data = await Request.create(req.body);
 
     res.status(201).json({
       success: true,
-      message: "Blood request submitted successfully",
-      data: request,
+      message: "Request created successfully",
+      data
     });
   } catch (error) {
-    console.log(error);
-
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: error.message
     });
   }
 };
 
-// Get All Requests
+// ➤ GET ALL REQUESTS
 const getAllRequests = async (req, res) => {
   try {
-    const requests = await Request.find().sort({
-      createdAt: -1,
-    });
+    const data = await Request.find().sort({ createdAt: -1 });
 
-    res.status(200).json({
+    res.json({
       success: true,
-      data: requests,
+      data
     });
   } catch (error) {
-    console.log(error);
-
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: error.message
+    });
+  }
+};
+
+// ➤ APPROVE REQUEST
+const approveRequest = async (req, res) => {
+  try {
+    const data = await Request.findByIdAndUpdate(
+      req.params.id,
+      { status: "Approved" },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: "Request Approved",
+      data
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// ➤ REJECT REQUEST
+const rejectRequest = async (req, res) => {
+  try {
+    const data = await Request.findByIdAndUpdate(
+      req.params.id,
+      { status: "Rejected" },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: "Request Rejected",
+      data
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
     });
   }
 };
@@ -46,4 +82,6 @@ const getAllRequests = async (req, res) => {
 module.exports = {
   addRequest,
   getAllRequests,
+  approveRequest,
+  rejectRequest
 };
