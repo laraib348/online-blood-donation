@@ -1,184 +1,106 @@
 import { useState } from "react";
 
-export default function RequestBlood() {
+export default function BloodRequestForm() {
   const [formData, setFormData] = useState({
-    patientName: "",
-    bloodGroup: "",
+    name: "",
     age: "",
+    gender: "",
+    bloodGroup: "",
+    units: "",
     hospital: "",
     city: "",
     phone: "",
-    reason: "",
+    urgency: "Normal",
+    reason: ""
   });
 
-  const [submitted, setSubmitted] = useState(false);
-
-  // Handle Input Change
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Submit Form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        "http://localhost:8000/api/request/add",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetch("http://localhost:5000/api/request/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
 
-      const data = await response.json();
+      const data = await res.json();
+      alert(data.message || "Request submitted successfully!");
 
-      if (data.success) {
-        setSubmitted(true);
-
-        setFormData({
-          patientName: "",
-          bloodGroup: "",
-          age: "",
-          hospital: "",
-          city: "",
-          phone: "",
-          reason: "",
-        });
-      } else {
-        alert(data.message);
-      }
+      // reset form
+      setFormData({
+        name: "",
+        age: "",
+        gender: "",
+        bloodGroup: "",
+        units: "",
+        hospital: "",
+        city: "",
+        phone: "",
+        urgency: "Normal",
+        reason: ""
+      });
     } catch (error) {
       console.log(error);
-      alert("Something went wrong");
+      alert("Error submitting request");
     }
   };
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        maxWidth: "500px",
-        margin: "auto",
-      }}
-    >
-      <h1 style={{ textAlign: "center" }}>Request Blood</h1>
+    <div className="form-container">
+      <h2>🩸 Blood Request Form</h2>
 
-      {submitted && (
-        <div
-          style={{
-            background: "#d4ffd4",
-            padding: "10px",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            textAlign: "center",
-            color: "green",
-          }}
-        >
-          Blood request submitted successfully!
-        </div>
-      )}
+      <form onSubmit={handleSubmit}>
+        <input name="name" placeholder="Patient Name" onChange={handleChange} value={formData.name} required />
 
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-          marginTop: "20px",
-        }}
-      >
-        <input
-          type="text"
-          name="patientName"
-          placeholder="Patient Name"
-          value={formData.patientName}
-          onChange={handleChange}
-          required
-        />
+        <input name="age" placeholder="Age" type="number" onChange={handleChange} value={formData.age} required />
 
-        <select
-          name="bloodGroup"
-          value={formData.bloodGroup}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Blood Group</option>
-          <option value="A+">A+</option>
-          <option value="A-">A-</option>
-          <option value="B+">B+</option>
-          <option value="B-">B-</option>
-          <option value="O+">O+</option>
-          <option value="O-">O-</option>
-          <option value="AB+">AB+</option>
-          <option value="AB-">AB-</option>
+        <select name="gender" onChange={handleChange} value={formData.gender} required>
+          <option value="">Select Gender</option>
+          <option>Male</option>
+          <option>Female</option>
         </select>
 
-        <input
-          type="number"
-          name="age"
-          placeholder="Patient Age"
-          value={formData.age}
-          onChange={handleChange}
-          required
-        />
+        <select name="bloodGroup" onChange={handleChange} value={formData.bloodGroup} required>
+          <option value="">Blood Group</option>
+          <option>A+</option>
+          <option>A-</option>
+          <option>B+</option>
+          <option>B-</option>
+          <option>O+</option>
+          <option>O-</option>
+          <option>AB+</option>
+          <option>AB-</option>
+        </select>
 
-        <input
-          type="text"
-          name="hospital"
-          placeholder="Hospital Name"
-          value={formData.hospital}
-          onChange={handleChange}
-          required
-        />
+        <input name="units" placeholder="Units Needed" type="number" onChange={handleChange} value={formData.units} required />
 
-        <input
-          type="text"
-          name="city"
-          placeholder="City"
-          value={formData.city}
-          onChange={handleChange}
-          required
-        />
+        <input name="hospital" placeholder="Hospital Name" onChange={handleChange} value={formData.hospital} />
 
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone Number"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-        />
+        <input name="city" placeholder="City" onChange={handleChange} value={formData.city} required />
+
+        <input name="phone" placeholder="Phone Number" onChange={handleChange} value={formData.phone} required />
+
+        <select name="urgency" onChange={handleChange} value={formData.urgency}>
+          <option>Normal</option>
+          <option>Urgent</option>
+          <option>Emergency</option>
+        </select>
 
         <textarea
           name="reason"
-          placeholder="Reason for blood need"
-          rows="4"
-          value={formData.reason}
+          placeholder="Reason (optional)"
           onChange={handleChange}
-          required
-        ></textarea>
+          value={formData.reason}
+        />
 
-        <button
-          type="submit"
-          style={{
-            background: "red",
-            color: "white",
-            padding: "12px",
-            fontSize: "16px",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
-          Submit Request
-        </button>
+        <button type="submit">Submit Request</button>
       </form>
     </div>
   );

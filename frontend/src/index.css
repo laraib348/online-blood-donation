@@ -85,3 +85,32 @@ body {
 .contact-btn:hover {
   background: red;
 }
+.form-container {
+  width: 400px;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input, select, textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
