@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export default function BloodRequestForm() {
   const [formData, setFormData] = useState({
-    name: "",
+    patientName: "",
     age: "",
     gender: "",
     bloodGroup: "",
@@ -33,9 +33,8 @@ export default function BloodRequestForm() {
       const data = await res.json();
       alert(data.message || "Request submitted successfully!");
 
-      // reset form
       setFormData({
-        name: "",
+        patientName: "",
         age: "",
         gender: "",
         bloodGroup: "",
@@ -46,6 +45,7 @@ export default function BloodRequestForm() {
         urgency: "Normal",
         reason: ""
       });
+
     } catch (error) {
       console.log(error);
       alert("Error submitting request");
@@ -57,17 +57,40 @@ export default function BloodRequestForm() {
       <h2>🩸 Blood Request Form</h2>
 
       <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Patient Name" onChange={handleChange} value={formData.name} required />
+        <input
+          name="patientName"
+          placeholder="Patient Name"
+          onChange={handleChange}
+          value={formData.patientName}
+          required
+        />
 
-        <input name="age" placeholder="Age" type="number" onChange={handleChange} value={formData.age} required />
+        <input
+          name="age"
+          type="number"
+          placeholder="Age"
+          onChange={handleChange}
+          value={formData.age}
+          required
+        />
 
-        <select name="gender" onChange={handleChange} value={formData.gender} required>
+        <select
+          name="gender"
+          onChange={handleChange}
+          value={formData.gender}
+          required
+        >
           <option value="">Select Gender</option>
           <option>Male</option>
           <option>Female</option>
         </select>
 
-        <select name="bloodGroup" onChange={handleChange} value={formData.bloodGroup} required>
+        <select
+          name="bloodGroup"
+          onChange={handleChange}
+          value={formData.bloodGroup}
+          required
+        >
           <option value="">Blood Group</option>
           <option>A+</option>
           <option>A-</option>
@@ -79,15 +102,43 @@ export default function BloodRequestForm() {
           <option>AB-</option>
         </select>
 
-        <input name="units" placeholder="Units Needed" type="number" onChange={handleChange} value={formData.units} required />
+        <input
+          name="units"
+          placeholder="Units Needed"
+          type="number"
+          onChange={handleChange}
+          value={formData.units}
+        />
 
-        <input name="hospital" placeholder="Hospital Name" onChange={handleChange} value={formData.hospital} />
+        <input
+          name="hospital"
+          placeholder="Hospital Name"
+          onChange={handleChange}
+          value={formData.hospital}
+          required
+        />
 
-        <input name="city" placeholder="City" onChange={handleChange} value={formData.city} required />
+        <input
+          name="city"
+          placeholder="City"
+          onChange={handleChange}
+          value={formData.city}
+          required
+        />
 
-        <input name="phone" placeholder="Phone Number" onChange={handleChange} value={formData.phone} required />
+        <input
+          name="phone"
+          placeholder="Phone Number"
+          onChange={handleChange}
+          value={formData.phone}
+          required
+        />
 
-        <select name="urgency" onChange={handleChange} value={formData.urgency}>
+        <select
+          name="urgency"
+          onChange={handleChange}
+          value={formData.urgency}
+        >
           <option>Normal</option>
           <option>Urgent</option>
           <option>Emergency</option>
@@ -95,9 +146,10 @@ export default function BloodRequestForm() {
 
         <textarea
           name="reason"
-          placeholder="Reason (optional)"
+          placeholder="Reason"
           onChange={handleChange}
           value={formData.reason}
+          required
         />
 
         <button type="submit">Submit Request</button>
