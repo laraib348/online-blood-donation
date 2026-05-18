@@ -1,73 +1,94 @@
-import { useState } from "react";
+// src/pages/DonorList.jsx
 
-export default function DonorList() {
-  // Dummy Donor Data (Without Firebase)
-  const [donors] = useState([
-    {
-      id: 1,
-      name: "Ali Khan",
-      age: 26,
-      gender: "Male",
-      blood_group: "A+",
-      phone: "0300-1234567",
-      city: "Lahore"
-    },
-    {
-      id: 2,
-      name: "Ayesha",
-      age: 22,
-      gender: "Female",
-      blood_group: "O-",
-      phone: "0311-9876543",
-      city: "Karachi"
-    },
-    {
-      id: 3,
-      name: "Usman",
-      age: 30,
-      gender: "Male",
-      blood_group: "B+",
-      phone: "0345-9988776",
-      city: "Islamabad"
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
+const DonorList = () => {
+  const [donors, setDonors] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    fetchDonors();
+  }, []);
+
+  const fetchDonors = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/donor");
+
+      setDonors(res.data.donors);
+    } catch (error) {
+      console.log(error);
     }
-  ]);
+  };
+
+  const filteredDonors = donors.filter(
+    (donor) =>
+      donor.name.toLowerCase().includes(search.toLowerCase()) ||
+      donor.bloodGroup.toLowerCase().includes(search.toLowerCase()) ||
+      donor.city.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1 style={{ textAlign: "center" }}>Donor List</h1>
+    <div className="donor-container">
+      <h1 className="title">Donor List</h1>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          gap: "20px",
-          marginTop: "20px",
-        }}
-      >
-        {donors.map((donor) => (
-          <div
-            key={donor.id}
-            style={{
-              padding: "20px",
-              border: "1px solid #ccc",
-              borderRadius: "10px",
-              background: "#fff7f7",
-            }}
-          >
-            <h3>{donor.name}</h3>
-            <p><strong>Age:</strong> {donor.age}</p>
-            <p><strong>Gender:</strong> {donor.gender}</p>
+      {/* Search */}
+      <input
+        type="text"
+        placeholder="Search by name, blood group, city..."
+        className="search-input"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      {/* Donor Cards */}
+      <div className="donor-grid">
+        {filteredDonors.map((donor) => (
+          <div className="donor-card" key={donor._id}>
+            <h2>{donor.name}</h2>
+
             <p>
-              <strong>Blood Group:</strong>{" "}
-              <span style={{ color: "red", fontWeight: "bold" }}>
-                {donor.blood_group}
+              <strong>Blood Group:</strong> {donor.bloodGroup}
+            </p>
+
+            <p>
+              <strong>City:</strong> {donor.city}
+            </p>
+
+            <p>
+              <strong>Email:</strong> {donor.email}
+            </p>
+
+            <p>
+              <strong>Phone:</strong> {donor.phone}
+            </p>
+
+            {/* Availability Status */}
+            <p>
+              <strong>Status:</strong>{" "}
+              <span
+                className={
+                  donor.availability === "Available"
+                    ? "available"
+                    : "not-available"
+                }
+              >
+                {donor.availability}
               </span>
             </p>
-            <p><strong>Phone:</strong> {donor.phone}</p>
-            <p><strong>City:</strong> {donor.city}</p>
+
+            {/* Last Donation */}
+            <p>
+              <strong>Last Donation:</strong>{" "}
+              {donor.lastDonation || "Not Donated Yet"}
+            </p>
+
+            <button className="contact-btn">Contact Donor</button>
           </div>
         ))}
       </div>
     </div>
   );
-}
+};
+
+export default DonorList;
