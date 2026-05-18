@@ -14,11 +14,12 @@ mongoose.connect(process.env.MONGO_URL)
 
 const donorRoutes = require('./routes/donorRoutes');
 const authRoutes = require('./routes/authRoutes')
+const requestRoutes = require('./routes/requestRoutes')
 
 app.use('/api/donor', donorRoutes);
-app.use('/api/auth' , authRoutes
+app.use('/api/auth' , authRoutes);
+app.use('/api/request' ,requestRoutes)
 
-)
 
 const PORT = process.env.PORT || 8000;
 
