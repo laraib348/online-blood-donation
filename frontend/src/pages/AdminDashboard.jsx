@@ -10,10 +10,7 @@ function AdminDashboard() {
   // Fetch Donors
   const fetchData = async () => {
     try {
-      const res = await axios.get(
-        'http://localhost:8000/api/donor/all'
-      )
-
+      const res = await axios.get('http://localhost:8000/api/donor/all')
       setDonors(res.data.donors)
     } catch (error) {
       console.log(error)
@@ -23,10 +20,7 @@ function AdminDashboard() {
   // Fetch Blood Requests
   const fetchRequests = async () => {
     try {
-      const res = await axios.get(
-        'http://localhost:8000/api/request/all'
-      )
-
+      const res = await axios.get('http://localhost:8000/api/request/all')
       setRequests(res.data.data)
     } catch (error) {
       console.log(error)
@@ -35,11 +29,28 @@ function AdminDashboard() {
 
   // Delete Donor
   const deleteDonor = async (id) => {
-    await axios.delete(
-      `http://localhost:8000/api/donor/delete/${id}`
-    )
-
+    await axios.delete(`http://localhost:8000/api/donor/delete/${id}`)
     fetchData()
+  }
+
+  // ✅ APPROVE REQUEST
+  const approveRequest = async (id) => {
+    try {
+      await axios.put(`http://localhost:8000/api/request/approve/${id}`)
+      fetchRequests()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // ❌ REJECT REQUEST
+  const rejectRequest = async (id) => {
+    try {
+      await axios.put(`http://localhost:8000/api/request/reject/${id}`)
+      fetchRequests()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
@@ -91,35 +102,48 @@ function AdminDashboard() {
                   {req.patientName}
                 </h5>
 
+                <p><strong>Blood Group:</strong> {req.bloodGroup}</p>
+                <p><strong>Age:</strong> {req.age}</p>
+                <p><strong>Hospital:</strong> {req.hospital}</p>
+                <p><strong>City:</strong> {req.city}</p>
+                <p><strong>Phone:</strong> {req.phone}</p>
+                <p><strong>Reason:</strong> {req.reason}</p>
+
+                {/* 🔥 STATUS */}
                 <p>
-                  <strong>Blood Group:</strong>{' '}
-                  {req.bloodGroup}
+                  <strong>Status:</strong>{" "}
+                  <span
+                    style={{
+                      color:
+                        req.status === "Approved"
+                          ? "green"
+                          : req.status === "Rejected"
+                          ? "red"
+                          : "orange"
+                    }}
+                  >
+                    {req.status || "Pending"}
+                  </span>
                 </p>
 
-                <p>
-                  <strong>Age:</strong>{' '}
-                  {req.age}
-                </p>
+                {/* 🔘 ACTION BUTTONS */}
+                <div className="d-flex gap-2">
 
-                <p>
-                  <strong>Hospital:</strong>{' '}
-                  {req.hospital}
-                </p>
+                  <button
+                    className="btn btn-success btn-sm"
+                    onClick={() => approveRequest(req._id)}
+                  >
+                    Approve
+                  </button>
 
-                <p>
-                  <strong>City:</strong>{' '}
-                  {req.city}
-                </p>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => rejectRequest(req._id)}
+                  >
+                    Reject
+                  </button>
 
-                <p>
-                  <strong>Phone:</strong>{' '}
-                  {req.phone}
-                </p>
-
-                <p>
-                  <strong>Reason:</strong>{' '}
-                  {req.reason}
-                </p>
+                </div>
 
               </div>
 
