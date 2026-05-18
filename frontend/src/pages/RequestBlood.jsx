@@ -22,7 +22,7 @@ export default function BloodRequestForm() {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/api/request/add", {
+      const res = await fetch("http://localhost:8000/api/request/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
